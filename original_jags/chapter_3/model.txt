@@ -1,0 +1,23 @@
+
+## Health economic evaluation --- example for Chapter 3
+## Loosely based on Fox-Rushby & Cairns (2005). Economic Evaluation. Open University Press
+
+model {
+	for (s in 1:N.studies) {
+		se[s] ~ dbin(pi[1],n[s])
+		amb[s] ~ dbin(gamma,se[s])
+	}
+	pi[1] ~ dbeta(a.pi,b.pi)
+	pi[2] <- pi[1]*rho
+	rho ~ dnorm(m.rho,tau.rho)
+	gamma ~ dbeta(a.gamma,b.gamma)
+	c.amb ~ dlnorm(m.amb,tau.amb)
+	c.hosp ~ dlnorm(m.hosp,tau.hosp)
+
+# Predictive distributions on the clinical outcomes
+	for (t in 1:2) {
+		SE[t] ~ dbin(pi[t],N)
+		A[t] ~ dbin(gamma,SE[t])
+		H[t] <- SE[t] - A[t]
+	}
+}

@@ -1,0 +1,42 @@
+# Model for Acupuncture RCT data (based on Nixon & Thompson http://www.mrc-bsu.cam.ac.uk/bayescost/packages/talks.pdf)
+model {
+# Controls
+	for(i in 1:n[1]){
+		c1[i] ~ dgamma(eta[1],lambda1[i])
+		lambda1[i] <- eta[1] / phi1[i]		# Defines rate of Gamma in terms of the mean
+		e1[i] ~ dnorm(mu.e[1],tau[1])
+		phi1[i] <- mu.c[1]+beta[1]*(e1[i]-mu.e[1])
+	}
+# Treatments
+	for(i in 1:n[2]){
+		c2[i] ~ dgamma(eta[2],lambda2[i])
+		lambda2[i] <- eta[2] / phi2[i]		# Defines rate of Gamma in terms of the mean
+		e2[i] ~ dnorm(mu.e[2],tau[2])
+		phi2[i] <- mu.c[2]+beta[2]*(e2[i]-mu.e[2])
+	}
+
+## Node transformation 
+	for (t in 1:2) {
+		tau[t] <- pow(sigma.e[t],-2)			# precision for QALYs
+		sigma2.e[t] <- pow(sigma.e[t],2)		# variance for QALYs
+		sigma.e[t] <- exp(logsigma.e[t])		# standard deviation for QALYs
+
+## Prior distributions
+		eta[t] ~ dunif(0,100)				# shape parameter for Gamma distribution
+		mu.c[t] ~ dunif(low,upp)			# mean cost (normal scale)
+		mu.e[t] ~ dnorm(0, 1.0E-6)			# mean QALY (logit scale)
+		logsigma.e[t] ~ dunif(-5,10)			# log-standard deviation for QALYs
+		beta[t] ~ dnorm(0,0.00001)			# regression between (e,c) 
+	}	
+
+## Prediction of costs and utilities
+##	for (i in 1:n[1]) {
+##		c1.rep[i] ~ dgamma(eta[1],lambda1[i])
+##		e1.rep[i] ~ dnorm(mu.e[1],tau[1])
+##	}
+##	for (i in 1:n[2]) {
+##		c2.rep[i] ~ dgamma(eta[2],lambda2[i])
+##		e2.rep[i] ~ dnorm(mu.e[2],tau[2])
+##	}
+}
+

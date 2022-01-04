@@ -1,0 +1,46 @@
+# Model for Acupuncture RCT data (based on Nixon & Thompson http://www.mrc-bsu.cam.ac.uk/bayescost/packages/talks.pdf)
+model {
+	for(i in 1:n[1]){
+		c1[i] ~ dlnorm(nu1[i],tau.c[1])
+		e1[i] ~ dnorm(phi1[i],tau.e[1])
+		phi1[i] <- mu.e[1]+beta[1]*(c1[i]-mu.c[1])
+		nu1[i] <- log(mu.c[1])-.5*sigma2.c[1]
+	}
+
+## Treatments
+	for(i in 1:n[2]){
+		c2[i] ~ dlnorm(nu2[i],tau.c[2])
+		e2[i] ~ dnorm(phi2[i],tau.e[2])
+		phi2[i] <- mu.e[2]+beta[2]*(c2[i]-mu.c[2])
+		nu2[i] <- log(mu.c[2])-.5*sigma2.c[2]
+	}
+
+## Node transformations (for both strategies)
+	for (t in 1:2) {
+		tau.c[t] <- pow(sigma.c[t],-2)			# precision for log costs
+		sigma2.c[t] <- pow(sigma.c[t],2)		# variance for log costs
+		sigma.c[t] <- exp(logsigma.c[t])		# standard deviation for log costs
+
+		tau.e[t] <- pow(sigma.e[t],-2)			# precision for QALYs
+		sigma2.e[t] <- pow(sigma.e[t],2)		# variance for QALYs
+		sigma.e[t] <- exp(logsigma.e[t])		# standard deviation for QALYs
+
+## Prior distributions
+		mu.c[t] ~ dunif(low,upp)			# mean costs (natural scale)
+		logsigma.c[t] ~ dunif(-5,10)			# log-standard deviation for costs
+		mu.e[t] ~ dnorm(0, 1.0E-6)			# mean QALY (logit scale)
+		logsigma.e[t] ~ dunif(-5,10)			# log-standard deviation for QALYs
+		beta[t] ~ dunif(-5,5)				# regression between (e,c) 
+	}
+
+## Prediction of costs and utilities
+##	for (i in 1:n[1]) {
+##		c1.rep[i] ~ dlnorm(nu1[i],tau.c[1])
+##		e1.rep[i] ~ dnorm(phi1[i],tau.e[1])
+##	}
+##	for (i in 1:n[2]) {
+##		c2.rep[i] ~ dlnorm(nu2[i],tau.c[2])
+##		e2.rep[i] ~ dnorm(phi2[i],tau.e[2])
+##	}
+}
+

@@ -1,0 +1,5 @@
+book_filename: "BMHE-stan"
+delete_merged_file: true
+language:
+  ui:
+    chapter_name: "Chapter "

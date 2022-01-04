@@ -1,0 +1,16 @@
+model {
+	for (i in 1:N) {
+	    y[i] ~ dnorm(mu[i],tau)
+	    mu[i] <- alpha + beta*X[i]
+	}
+	# Blocking of coefficients
+	coef[1:2] ~ dmnorm(m0[1:2],prec[1:2,1:2])	
+
+	alpha <- coef[1]
+	beta <- coef[2]
+
+	lsigma ~ dunif(-k,k)
+	sigma <- exp(lsigma)
+	tau <- pow(sigma,-2)
+}
+
