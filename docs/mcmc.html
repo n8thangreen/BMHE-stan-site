@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 2 MCMC | A Minimal Book Example</title>
+  <meta name="description" content="This is a minimal example of using the bookdown package to write a book. The output format for this example is bookdown::gitbook." />
+  <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 2 MCMC | A Minimal Book Example" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="This is a minimal example of using the bookdown package to write a book. The output format for this example is bookdown::gitbook." />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 2 MCMC | A Minimal Book Example" />
+  
+  <meta name="twitter:description" content="This is a minimal example of using the bookdown package to write a book. The output format for this example is bookdown::gitbook." />
+  
+
+<meta name="author" content="Yihui Xie" />
+
+
+<meta name="date" content="2022-01-04" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="intro.html"/>
+<link rel="next" href="methods.html"/>
+<script src="libs/header-attrs-2.11/header-attrs.js"></script>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+/* Used with Pandoc 2.11+ new --citeproc when CSL is used */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">A Minimal Book Example</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="intro.html"><a href="intro.html"><i class="fa fa-check"></i><b>1</b> Introduction</a></li>
+<li class="chapter" data-level="2" data-path="mcmc.html"><a href="mcmc.html"><i class="fa fa-check"></i><b>2</b> MCMC</a></li>
+<li class="chapter" data-level="3" data-path="methods.html"><a href="methods.html"><i class="fa fa-check"></i><b>3</b> Methods</a></li>
+<li class="chapter" data-level="4" data-path="applications.html"><a href="applications.html"><i class="fa fa-check"></i><b>4</b> Applications</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="applications.html"><a href="applications.html#example-one"><i class="fa fa-check"></i><b>4.1</b> Example one</a></li>
+<li class="chapter" data-level="4.2" data-path="applications.html"><a href="applications.html#example-two"><i class="fa fa-check"></i><b>4.2</b> Example two</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="final-words.html"><a href="final-words.html"><i class="fa fa-check"></i><b>5</b> Final Words</a></li>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">A Minimal Book Example</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="mcmc" class="section level1" number="2">
+<h1><span class="header-section-number">Chapter 2</span> MCMC</h1>
+<p>Here is the Stan code equivalent to the original JAGS code in BMHE.</p>
+<pre class="stan"><code>// normal model
+
+data {
+  int&lt;lower=1&gt; N;   // sample size
+  real&lt;lower=0&gt; k;  // uniform prior bounds
+  real y[N];
+  real X[N];
+}
+
+parameters {
+  real beta;
+  real alpha;
+  real lsigma;
+}
+
+transformed parameters {
+  real mu[N];
+    real&lt;lower=0&gt; sigma = exp(lsigma);
+    
+    for (i in 1:N) {
+      mu[i] = alpha + beta*X[i];
+    }
+}
+
+model {
+  // likelihood
+    for (i in 1:N) {
+      target += normal_lpdf(y[i] | mu[i], sigma);
+    }
+    
+    // priors
+  //    alpha ~ normal(0, 0.00001);
+  //    beta ~ normal(0, 0.00001);
+    alpha ~ uniform(-k, k);
+    beta ~ uniform(-k, k);
+    lsigma ~ uniform(-k, k);
+}</code></pre>
+<p>The R code for running this Stan code and presenting the results is very similar to the original.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="mcmc.html#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="do">## ANALYSIS OF THE NORMAL MODEL - pages 69-73</span></span>
+<span id="cb4-2"><a href="mcmc.html#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-3"><a href="mcmc.html#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co"># define the working directory assuming - the user is already in ~/WebMaterial/ch2</span></span>
+<span id="cb4-4"><a href="mcmc.html#cb4-4" aria-hidden="true" tabindex="-1"></a>working.dir <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="fu">getwd</span>(), <span class="st">&quot;/&quot;</span>)</span>
+<span id="cb4-5"><a href="mcmc.html#cb4-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-6"><a href="mcmc.html#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Load data from STATA .dta format</span></span>
+<span id="cb4-7"><a href="mcmc.html#cb4-7" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> foreign<span class="sc">::</span><span class="fu">read.dta</span>(<span class="st">&quot;phbirths.dta&quot;</span>)</span>
+<span id="cb4-8"><a href="mcmc.html#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="fu">attach</span>(data)</span>
+<span id="cb4-9"><a href="mcmc.html#cb4-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-10"><a href="mcmc.html#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Arrange the data and define relevant variables</span></span>
+<span id="cb4-11"><a href="mcmc.html#cb4-11" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> grams</span>
+<span id="cb4-12"><a href="mcmc.html#cb4-12" aria-hidden="true" tabindex="-1"></a>N <span class="ot">&lt;-</span> <span class="fu">length</span>(y)</span>
+<span id="cb4-13"><a href="mcmc.html#cb4-13" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> gestate</span>
+<span id="cb4-14"><a href="mcmc.html#cb4-14" aria-hidden="true" tabindex="-1"></a>k <span class="ot">&lt;-</span> <span class="dv">5000</span></span>
+<span id="cb4-15"><a href="mcmc.html#cb4-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-16"><a href="mcmc.html#cb4-16" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(R2jags)</span>
+<span id="cb4-17"><a href="mcmc.html#cb4-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-18"><a href="mcmc.html#cb4-18" aria-hidden="true" tabindex="-1"></a>stan_dat <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="st">&quot;N&quot;</span>,<span class="st">&quot;y&quot;</span>,<span class="st">&quot;X&quot;</span>,<span class="st">&quot;k&quot;</span>)                       <span class="co"># define the data</span></span>
+<span id="cb4-19"><a href="mcmc.html#cb4-19" aria-hidden="true" tabindex="-1"></a>filein <span class="ot">&lt;-</span> <span class="fu">paste0</span>(working.dir,<span class="st">&quot;modelNormal.stan&quot;</span>)    <span class="co"># define the model file</span></span>
+<span id="cb4-20"><a href="mcmc.html#cb4-20" aria-hidden="true" tabindex="-1"></a>params <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;alpha&quot;</span>,<span class="st">&quot;beta&quot;</span>,<span class="st">&quot;sigma&quot;</span>)                     <span class="co"># define the parameters to be monitored</span></span>
+<span id="cb4-21"><a href="mcmc.html#cb4-21" aria-hidden="true" tabindex="-1"></a>inits <span class="ot">&lt;-</span> <span class="cf">function</span>(){                        <span class="co"># create a function to randomly simulate </span></span>
+<span id="cb4-22"><a href="mcmc.html#cb4-22" aria-hidden="true" tabindex="-1"></a>    <span class="fu">list</span>(<span class="at">alpha =</span> <span class="fu">rnorm</span>(<span class="dv">1</span>),</span>
+<span id="cb4-23"><a href="mcmc.html#cb4-23" aria-hidden="true" tabindex="-1"></a>         <span class="at">beta =</span> <span class="fu">rnorm</span>(<span class="dv">1</span>),</span>
+<span id="cb4-24"><a href="mcmc.html#cb4-24" aria-hidden="true" tabindex="-1"></a>         <span class="at">lsigma =</span> <span class="fu">rnorm</span>(<span class="dv">1</span>))       <span class="co"># initial values for the required nodes</span></span>
+<span id="cb4-25"><a href="mcmc.html#cb4-25" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb4-26"><a href="mcmc.html#cb4-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-27"><a href="mcmc.html#cb4-27" aria-hidden="true" tabindex="-1"></a><span class="do">###########################################</span></span>
+<span id="cb4-28"><a href="mcmc.html#cb4-28" aria-hidden="true" tabindex="-1"></a><span class="do">## 1. Uncentred model</span></span>
+<span id="cb4-29"><a href="mcmc.html#cb4-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-30"><a href="mcmc.html#cb4-30" aria-hidden="true" tabindex="-1"></a>n.iter <span class="ot">&lt;-</span> <span class="dv">10000</span>                         <span class="co"># define the number of iterations</span></span>
+<span id="cb4-31"><a href="mcmc.html#cb4-31" aria-hidden="true" tabindex="-1"></a>n.burnin <span class="ot">&lt;-</span> <span class="dv">9500</span>                        <span class="co"># define the burn-in</span></span>
+<span id="cb4-32"><a href="mcmc.html#cb4-32" aria-hidden="true" tabindex="-1"></a>n.thin <span class="ot">&lt;-</span> <span class="fu">floor</span>((n.iter <span class="sc">-</span> n.burnin)<span class="sc">/</span><span class="dv">500</span>)    <span class="co"># compute the thinning to have 1000 iterations monitored</span></span>
+<span id="cb4-33"><a href="mcmc.html#cb4-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-34"><a href="mcmc.html#cb4-34" aria-hidden="true" tabindex="-1"></a><span class="co"># Launch Stan and print the summary table</span></span>
+<span id="cb4-35"><a href="mcmc.html#cb4-35" aria-hidden="true" tabindex="-1"></a>m<span class="fl">.1</span> <span class="ot">&lt;-</span></span>
+<span id="cb4-36"><a href="mcmc.html#cb4-36" aria-hidden="true" tabindex="-1"></a>  rstan<span class="sc">::</span><span class="fu">stan</span>(<span class="at">data =</span> stan_dat,</span>
+<span id="cb4-37"><a href="mcmc.html#cb4-37" aria-hidden="true" tabindex="-1"></a>              <span class="at">init =</span> inits,</span>
+<span id="cb4-38"><a href="mcmc.html#cb4-38" aria-hidden="true" tabindex="-1"></a>              <span class="at">pars =</span> params,</span>
+<span id="cb4-39"><a href="mcmc.html#cb4-39" aria-hidden="true" tabindex="-1"></a>              <span class="at">file =</span> filein,</span>
+<span id="cb4-40"><a href="mcmc.html#cb4-40" aria-hidden="true" tabindex="-1"></a>              <span class="at">chains =</span> <span class="dv">2</span>,</span>
+<span id="cb4-41"><a href="mcmc.html#cb4-41" aria-hidden="true" tabindex="-1"></a>              <span class="at">iter =</span> n.iter,</span>
+<span id="cb4-42"><a href="mcmc.html#cb4-42" aria-hidden="true" tabindex="-1"></a>              <span class="at">warmup =</span> n.burnin,</span>
+<span id="cb4-43"><a href="mcmc.html#cb4-43" aria-hidden="true" tabindex="-1"></a>              <span class="at">thin =</span> n.thin)</span>
+<span id="cb4-44"><a href="mcmc.html#cb4-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-45"><a href="mcmc.html#cb4-45" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(m<span class="fl">.1</span>, <span class="at">digits=</span><span class="dv">3</span>, <span class="at">intervals=</span><span class="fu">c</span>(<span class="fl">0.025</span>, <span class="fl">0.975</span>))</span>
+<span id="cb4-46"><a href="mcmc.html#cb4-46" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-47"><a href="mcmc.html#cb4-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-48"><a href="mcmc.html#cb4-48" aria-hidden="true" tabindex="-1"></a><span class="do">#############################################################</span></span>
+<span id="cb4-49"><a href="mcmc.html#cb4-49" aria-hidden="true" tabindex="-1"></a><span class="do">## 2. Uncentred model with thinning (run for longer chains)</span></span>
+<span id="cb4-50"><a href="mcmc.html#cb4-50" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-51"><a href="mcmc.html#cb4-51" aria-hidden="true" tabindex="-1"></a>n.iter <span class="ot">&lt;-</span> <span class="dv">50000</span>                         <span class="co"># increase number of iterations to improve convergence</span></span>
+<span id="cb4-52"><a href="mcmc.html#cb4-52" aria-hidden="true" tabindex="-1"></a>n.burnin <span class="ot">&lt;-</span> <span class="dv">9500</span>                        <span class="co"># same burn-in</span></span>
+<span id="cb4-53"><a href="mcmc.html#cb4-53" aria-hidden="true" tabindex="-1"></a>n.thin <span class="ot">&lt;-</span> <span class="fu">floor</span>((n.iter <span class="sc">-</span> n.burnin)<span class="sc">/</span><span class="dv">500</span>)                <span class="co"># compute thinning, this time &gt; 1</span></span>
+<span id="cb4-54"><a href="mcmc.html#cb4-54" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-55"><a href="mcmc.html#cb4-55" aria-hidden="true" tabindex="-1"></a>m<span class="fl">.2</span> <span class="ot">&lt;-</span> </span>
+<span id="cb4-56"><a href="mcmc.html#cb4-56" aria-hidden="true" tabindex="-1"></a>  rstan<span class="sc">::</span><span class="fu">stan</span>(<span class="at">data =</span> stan_dat,</span>
+<span id="cb4-57"><a href="mcmc.html#cb4-57" aria-hidden="true" tabindex="-1"></a>              <span class="at">init =</span> inits,</span>
+<span id="cb4-58"><a href="mcmc.html#cb4-58" aria-hidden="true" tabindex="-1"></a>              <span class="at">pars =</span> params,</span>
+<span id="cb4-59"><a href="mcmc.html#cb4-59" aria-hidden="true" tabindex="-1"></a>              <span class="at">file =</span> filein,</span>
+<span id="cb4-60"><a href="mcmc.html#cb4-60" aria-hidden="true" tabindex="-1"></a>              <span class="at">chains =</span> <span class="dv">2</span>,</span>
+<span id="cb4-61"><a href="mcmc.html#cb4-61" aria-hidden="true" tabindex="-1"></a>              <span class="at">iter =</span> n.iter,</span>
+<span id="cb4-62"><a href="mcmc.html#cb4-62" aria-hidden="true" tabindex="-1"></a>              <span class="at">warmup =</span> n.burnin,</span>
+<span id="cb4-63"><a href="mcmc.html#cb4-63" aria-hidden="true" tabindex="-1"></a>              <span class="at">thin =</span> n.thin)</span>
+<span id="cb4-64"><a href="mcmc.html#cb4-64" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-65"><a href="mcmc.html#cb4-65" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(m<span class="fl">.2</span>, <span class="at">digits=</span><span class="dv">3</span>, <span class="at">intervals=</span><span class="fu">c</span>(<span class="fl">0.025</span>, <span class="fl">0.975</span>))</span>
+<span id="cb4-66"><a href="mcmc.html#cb4-66" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-67"><a href="mcmc.html#cb4-67" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-68"><a href="mcmc.html#cb4-68" aria-hidden="true" tabindex="-1"></a><span class="do">################################################</span></span>
+<span id="cb4-69"><a href="mcmc.html#cb4-69" aria-hidden="true" tabindex="-1"></a><span class="do">## 3. Centred model</span></span>
+<span id="cb4-70"><a href="mcmc.html#cb4-70" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-71"><a href="mcmc.html#cb4-71" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> gestate <span class="sc">-</span> <span class="fu">mean</span>(gestate)                    <span class="co"># create centred covariate to improve convergence</span></span>
+<span id="cb4-72"><a href="mcmc.html#cb4-72" aria-hidden="true" tabindex="-1"></a>stan_dat <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="st">&quot;N&quot;</span>,<span class="st">&quot;y&quot;</span>,<span class="st">&quot;X&quot;</span>,<span class="st">&quot;k&quot;</span>)       <span class="co"># need to re-define data list</span></span>
+<span id="cb4-73"><a href="mcmc.html#cb4-73" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-74"><a href="mcmc.html#cb4-74" aria-hidden="true" tabindex="-1"></a>n.iter <span class="ot">&lt;-</span> <span class="dv">10000</span>                                     <span class="co"># doesn&#39;t need so many iterations, now</span></span>
+<span id="cb4-75"><a href="mcmc.html#cb4-75" aria-hidden="true" tabindex="-1"></a>n.burnin <span class="ot">&lt;-</span> <span class="dv">9500</span></span>
+<span id="cb4-76"><a href="mcmc.html#cb4-76" aria-hidden="true" tabindex="-1"></a>n.thin <span class="ot">&lt;-</span> <span class="fu">floor</span>((n.iter <span class="sc">-</span> n.burnin)<span class="sc">/</span><span class="dv">500</span>)    <span class="co"># thinning computed and set to 1 again</span></span>
+<span id="cb4-77"><a href="mcmc.html#cb4-77" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-78"><a href="mcmc.html#cb4-78" aria-hidden="true" tabindex="-1"></a>m<span class="fl">.3</span> <span class="ot">&lt;-</span> </span>
+<span id="cb4-79"><a href="mcmc.html#cb4-79" aria-hidden="true" tabindex="-1"></a>  rstan<span class="sc">::</span><span class="fu">stan</span>(<span class="at">data =</span> stan_dat,</span>
+<span id="cb4-80"><a href="mcmc.html#cb4-80" aria-hidden="true" tabindex="-1"></a>              <span class="at">init =</span> inits,</span>
+<span id="cb4-81"><a href="mcmc.html#cb4-81" aria-hidden="true" tabindex="-1"></a>              <span class="at">pars =</span> params,</span>
+<span id="cb4-82"><a href="mcmc.html#cb4-82" aria-hidden="true" tabindex="-1"></a>              <span class="at">file =</span> filein,</span>
+<span id="cb4-83"><a href="mcmc.html#cb4-83" aria-hidden="true" tabindex="-1"></a>              <span class="at">chains =</span> <span class="dv">2</span>,</span>
+<span id="cb4-84"><a href="mcmc.html#cb4-84" aria-hidden="true" tabindex="-1"></a>              <span class="at">iter =</span> n.iter,</span>
+<span id="cb4-85"><a href="mcmc.html#cb4-85" aria-hidden="true" tabindex="-1"></a>              <span class="at">warmup =</span> n.burnin,</span>
+<span id="cb4-86"><a href="mcmc.html#cb4-86" aria-hidden="true" tabindex="-1"></a>              <span class="at">thin =</span> n.thin)</span>
+<span id="cb4-87"><a href="mcmc.html#cb4-87" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-88"><a href="mcmc.html#cb4-88" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(m<span class="fl">.3</span>,<span class="at">digits=</span><span class="dv">3</span>, <span class="at">intervals=</span><span class="fu">c</span>(<span class="fl">0.025</span>, <span class="fl">0.975</span>))</span></code></pre></div>
+<p>The plotting code here is simpler than the original JAGS code because we call the plotting functions from <code>rstan</code> directly.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="mcmc.html#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="do">###########</span></span>
+<span id="cb5-2"><a href="mcmc.html#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="do">## plots ##</span></span>
+<span id="cb5-3"><a href="mcmc.html#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="do">###########</span></span>
+<span id="cb5-4"><a href="mcmc.html#cb5-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-5"><a href="mcmc.html#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="do">### 1. Uncentred model</span></span>
+<span id="cb5-6"><a href="mcmc.html#cb5-6" aria-hidden="true" tabindex="-1"></a>rstan<span class="sc">::</span><span class="fu">traceplot</span>(m<span class="fl">.1</span>, <span class="at">pars =</span> <span class="fu">c</span>(<span class="st">&quot;alpha&quot;</span>, <span class="st">&quot;beta&quot;</span>), <span class="at">nrow =</span> <span class="dv">2</span>)</span>
+<span id="cb5-7"><a href="mcmc.html#cb5-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-8"><a href="mcmc.html#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="do">## ACF plot</span></span>
+<span id="cb5-9"><a href="mcmc.html#cb5-9" aria-hidden="true" tabindex="-1"></a>rstan<span class="sc">::</span><span class="fu">stan_ac</span>(m<span class="fl">.1</span>, <span class="at">pars =</span> <span class="fu">c</span>(<span class="st">&quot;alpha&quot;</span>, <span class="st">&quot;beta&quot;</span>))</span>
+<span id="cb5-10"><a href="mcmc.html#cb5-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-11"><a href="mcmc.html#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="do">## Computes correlation for this model</span></span>
+<span id="cb5-12"><a href="mcmc.html#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="fu">cor</span>(alpha.u,beta.u)</span>
+<span id="cb5-13"><a href="mcmc.html#cb5-13" aria-hidden="true" tabindex="-1"></a>txt2 <span class="ot">&lt;-</span> <span class="fu">substitute</span>(<span class="st">&quot;Scatterplot for &quot;</span><span class="sc">*</span>alpha<span class="sc">*</span> <span class="st">&quot; and &quot;</span><span class="sc">*</span>beta<span class="sc">*</span> <span class="st">&quot; - Uncentred model&quot;</span>)</span>
+<span id="cb5-14"><a href="mcmc.html#cb5-14" aria-hidden="true" tabindex="-1"></a>rstan<span class="sc">::</span><span class="fu">stan_scat</span>(m<span class="fl">.1</span>, <span class="at">pars =</span> <span class="fu">c</span>(<span class="st">&quot;alpha&quot;</span>, <span class="st">&quot;beta&quot;</span>))</span>
+<span id="cb5-15"><a href="mcmc.html#cb5-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-16"><a href="mcmc.html#cb5-16" aria-hidden="true" tabindex="-1"></a><span class="do">### 2. Uncentred model with thinning</span></span>
+<span id="cb5-17"><a href="mcmc.html#cb5-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Traceplot</span></span>
+<span id="cb5-18"><a href="mcmc.html#cb5-18" aria-hidden="true" tabindex="-1"></a>rstan<span class="sc">::</span><span class="fu">traceplot</span>(m<span class="fl">.2</span>, <span class="at">pars =</span> <span class="fu">c</span>(<span class="st">&quot;alpha&quot;</span>, <span class="st">&quot;beta&quot;</span>), <span class="at">nrow =</span> <span class="dv">2</span>)</span>
+<span id="cb5-19"><a href="mcmc.html#cb5-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-20"><a href="mcmc.html#cb5-20" aria-hidden="true" tabindex="-1"></a><span class="do">## ACF plot</span></span>
+<span id="cb5-21"><a href="mcmc.html#cb5-21" aria-hidden="true" tabindex="-1"></a>rstan<span class="sc">::</span><span class="fu">stan_ac</span>(m<span class="fl">.2</span>, <span class="at">pars =</span> <span class="fu">c</span>(<span class="st">&quot;alpha&quot;</span>, <span class="st">&quot;beta&quot;</span>))</span>
+<span id="cb5-22"><a href="mcmc.html#cb5-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-23"><a href="mcmc.html#cb5-23" aria-hidden="true" tabindex="-1"></a><span class="do">## Computes correlation for this model</span></span>
+<span id="cb5-24"><a href="mcmc.html#cb5-24" aria-hidden="true" tabindex="-1"></a><span class="fu">cor</span>(alpha.l,beta.l)</span>
+<span id="cb5-25"><a href="mcmc.html#cb5-25" aria-hidden="true" tabindex="-1"></a>txt4 <span class="ot">&lt;-</span> <span class="fu">substitute</span>(<span class="st">&quot;Scatterplot for &quot;</span><span class="sc">*</span>alpha<span class="sc">*</span> <span class="st">&quot; and &quot;</span><span class="sc">*</span>beta<span class="sc">*</span> <span class="st">&quot; - Uncentred model with thinning&quot;</span>)</span>
+<span id="cb5-26"><a href="mcmc.html#cb5-26" aria-hidden="true" tabindex="-1"></a>rstan<span class="sc">::</span><span class="fu">stan_scat</span>(m<span class="fl">.2</span>, <span class="at">pars =</span> <span class="fu">c</span>(<span class="st">&quot;alpha&quot;</span>, <span class="st">&quot;beta&quot;</span>))</span>
+<span id="cb5-27"><a href="mcmc.html#cb5-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-28"><a href="mcmc.html#cb5-28" aria-hidden="true" tabindex="-1"></a><span class="do">### 3. Centred model </span></span>
+<span id="cb5-29"><a href="mcmc.html#cb5-29" aria-hidden="true" tabindex="-1"></a>rstan<span class="sc">::</span><span class="fu">traceplot</span>(m<span class="fl">.3</span>, <span class="at">pars =</span> <span class="fu">c</span>(<span class="st">&quot;alpha&quot;</span>, <span class="st">&quot;beta&quot;</span>), <span class="at">nrow =</span> <span class="dv">2</span>)</span>
+<span id="cb5-30"><a href="mcmc.html#cb5-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-31"><a href="mcmc.html#cb5-31" aria-hidden="true" tabindex="-1"></a><span class="do">## ACF plot</span></span>
+<span id="cb5-32"><a href="mcmc.html#cb5-32" aria-hidden="true" tabindex="-1"></a>rstan<span class="sc">::</span><span class="fu">stan_ac</span>(m<span class="fl">.3</span>, <span class="at">pars =</span> <span class="fu">c</span>(<span class="st">&quot;alpha&quot;</span>, <span class="st">&quot;beta&quot;</span>))</span>
+<span id="cb5-33"><a href="mcmc.html#cb5-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-34"><a href="mcmc.html#cb5-34" aria-hidden="true" tabindex="-1"></a><span class="do">## Plots Scatterplot for correlation</span></span>
+<span id="cb5-35"><a href="mcmc.html#cb5-35" aria-hidden="true" tabindex="-1"></a><span class="fu">cor</span>(alpha.c,beta.c)</span>
+<span id="cb5-36"><a href="mcmc.html#cb5-36" aria-hidden="true" tabindex="-1"></a>txt3 <span class="ot">&lt;-</span> <span class="fu">substitute</span>(<span class="st">&quot;Scatterplot for &quot;</span><span class="sc">*</span>alpha<span class="sc">*</span> <span class="st">&quot; and &quot;</span><span class="sc">*</span>beta<span class="sc">*</span> <span class="st">&quot; - Centred model&quot;</span>)</span>
+<span id="cb5-37"><a href="mcmc.html#cb5-37" aria-hidden="true" tabindex="-1"></a>rstan<span class="sc">::</span><span class="fu">stan_scat</span>(m<span class="fl">.3</span>, <span class="at">pars =</span> <span class="fu">c</span>(<span class="st">&quot;alpha&quot;</span>, <span class="st">&quot;beta&quot;</span>))</span></code></pre></div>
+
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="intro.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="methods.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["BMHE-stan.pdf", "BMHE-stan.epub"],
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+</body>
+
+</html>
